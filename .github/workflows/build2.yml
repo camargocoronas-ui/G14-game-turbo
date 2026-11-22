@@ -1,0 +1,18 @@
+name: Build APK 2
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sed 's/^[ \t]*//' setup.sh | bash
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v3
+        with: { gradle-version: 8.7 }
+      - run: gradle assembleDebug
+        working-directory: GameTurbo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GameTurbo-APK
+          path: GameTurbo/app/build/outputs/apk/debug/app-debug.apk
